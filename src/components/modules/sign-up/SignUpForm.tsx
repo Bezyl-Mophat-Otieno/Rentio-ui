@@ -1,29 +1,34 @@
 "use client";
-import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
 import Divider from "../../common/Divider";
 import EmailInput from "../../modules/form/EmailInput";
 import PasswordInput from "../../modules/form/PasswordInput";
 import RememberMe from "../../modules/form/RememberMe";
 import SocialButton from "../../common/SocialButton";
+import RadioButtonSelection from "../form/RadioButtonSelection";
 import Button from "../../common/Button";
+import { useForm, SubmitHandler } from "react-hook-form";
 
-type SignInFormInputs = {
+type SignUpFormInput = {
   email: string;
   password: string;
-  rememberMe: boolean;
+  confirmpassword: string;
 };
-
-const SignInForm: React.FC = () => {
+const SignUpForm: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInFormInputs>();
+  } = useForm<SignUpFormInput>();
 
-  const onSubmit: SubmitHandler<SignInFormInputs> = (data) => {
+  const roles = [
+    { value: "agent", label: "House Agent" },
+    { value: "landlord", label: "House Landlord" },
+    { value: "tenant", label: "Tenant" },
+    { value: "provider", label: "Service Provider" },
+  ];
+
+  const onSubmit: SubmitHandler<SignUpFormInput> = (data) => {
     console.log("Form submitted:", data);
-    // Handle sign-in logic
   };
 
   return (
@@ -34,7 +39,18 @@ const SignInForm: React.FC = () => {
         errors={errors}
         title="Enter password."
       />
-      <RememberMe register={register} />
+      <PasswordInput
+        register={register}
+        errors={errors}
+        title="Confirm password."
+      />
+      <RadioButtonSelection
+        register={register}
+        errors={errors}
+        roles={roles}
+        name="role"
+        label="Select Your Profile"
+      />
       <Button label="Login" type="submit" />
       <Divider />
       <div className="vstack gap-3">
@@ -57,4 +73,4 @@ const SignInForm: React.FC = () => {
   );
 };
 
-export default SignInForm;
+export default SignUpForm;

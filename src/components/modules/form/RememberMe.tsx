@@ -1,9 +1,22 @@
-import React from "react";
-import Checkbox from "../../common/Checkbox";
+import { UseFormRegister } from "react-hook-form";
 
-const RememberMe = () => (
+interface RememberMeProps {
+  register: UseFormRegister<any>;
+}
+
+const RememberMe = ({ register }: RememberMeProps) => (
   <div className="mb-3 d-sm-flex justify-content-between">
-    <Checkbox id="rememberCheck" label="Remember me?" />
+    <div>
+      <input
+        type="checkbox"
+        id="rememberMe"
+        {...register("rememberMe")}
+        className="form-check-input"
+      />
+      <label className="form-check-label" htmlFor="rememberMe">
+        Remember me?
+      </label>
+    </div>
     <a href="forgot-password.html">Forgot password?</a>
   </div>
 );
