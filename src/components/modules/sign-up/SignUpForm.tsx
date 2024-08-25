@@ -2,7 +2,6 @@
 import Divider from "../../common/Divider";
 import EmailInput from "../../modules/form/EmailInput";
 import PasswordInput from "../../modules/form/PasswordInput";
-import RememberMe from "../../modules/form/RememberMe";
 import SocialButton from "../../common/SocialButton";
 import RadioButtonSelection from "../form/RadioButtonSelection";
 import Button from "../../common/Button";
@@ -12,8 +11,9 @@ type SignUpFormInput = {
   email: string;
   password: string;
   confirmpassword: string;
+  role: string;
 };
-const SignUpForm: React.FC = () => {
+const SignUpForm = () => {
   const {
     register,
     handleSubmit,
@@ -38,11 +38,13 @@ const SignUpForm: React.FC = () => {
         register={register}
         errors={errors}
         title="Enter password."
+        name="password"
       />
       <PasswordInput
         register={register}
         errors={errors}
         title="Confirm password."
+        name="confirm-password"
       />
       <RadioButtonSelection
         register={register}
@@ -51,7 +53,7 @@ const SignUpForm: React.FC = () => {
         name="role"
         label="Select Your Profile"
       />
-      <Button label="Login" type="submit" />
+      <Button label="Create Account" type="submit" />
       <Divider />
       <div className="vstack gap-3">
         <SocialButton

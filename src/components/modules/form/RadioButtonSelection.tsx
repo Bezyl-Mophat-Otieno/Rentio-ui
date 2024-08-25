@@ -1,7 +1,5 @@
 import React from "react";
-import Input from "../../common/Input";
-import Label from "../../common/Label";
-import { UseFormRegister, FieldErrors } from "react-hook-form";
+import { UseFormRegister } from "react-hook-form";
 
 type RadioButtonSelectionProps = {
   roles: { value: string; label: string }[];
@@ -11,18 +9,18 @@ type RadioButtonSelectionProps = {
   errors?: any;
 };
 
-const RadioButtonSelection: React.FC<RadioButtonSelectionProps> = ({
+const RadioButtonSelection = ({
   roles,
   name,
   label,
   register,
   errors,
-}) => (
+}: RadioButtonSelectionProps) => (
   <div className="mb-3">
-    <Label htmlFor={name}>{label}</Label>
+    <label className="form-label">{label}</label>
     {roles.map((role) => (
       <div key={role.value} className="form-check">
-        <Input
+        <input
           type="radio"
           id={role.value}
           value={role.value}

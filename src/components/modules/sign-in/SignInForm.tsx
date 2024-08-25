@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import Divider from "../../common/Divider";
-import EmailInput from "../../modules/form/EmailInput";
-import PasswordInput from "../../modules/form/PasswordInput";
-import RememberMe from "../../modules/form/RememberMe";
-import SocialButton from "../../common/SocialButton";
-import Button from "../../common/Button";
+import Button from "@/components/common/Button";
+import Divider from "@/components/common/Divider";
+import EmailInput from "@/components/modules/form/EmailInput";
+import PasswordInput from "@/components/modules/form/PasswordInput";
+import RememberMe from "@/components/modules/form/RememberMe";
+import SocialButton from "@/components/common/SocialButton";
 
 type SignInFormInputs = {
   email: string;
@@ -33,6 +33,7 @@ const SignInForm: React.FC = () => {
         register={register}
         errors={errors}
         title="Enter password."
+        name="password"
       />
       <RememberMe register={register} />
       <Button label="Login" type="submit" />

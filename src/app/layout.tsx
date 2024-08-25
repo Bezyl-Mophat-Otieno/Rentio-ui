@@ -35,29 +35,28 @@ export default function RootLayout({
           <ThemeProvider attribute="data-bs-theme">{children}</ThemeProvider>
           <Script
             strategy="beforeInteractive"
-            src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
           ></Script>
           <Script
-            strategy="beforeInteractive"
-            src="assets/vendor/tiny-slider/tiny-slider.js"
+            strategy="lazyOnload"
+            src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"
           ></Script>
           <Script
-            strategy="beforeInteractive"
-            src="assets/vendor/glightbox/js/glightbox.js"
+            strategy="lazyOnload"
+            src="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.0.9/glightbox.min.js"
           ></Script>
           <Script
-            strategy="beforeInteractive"
-            src="assets/vendor/flatpickr/js/flatpickr.min.js"
+            strategy="lazyOnload"
+            src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"
           ></Script>
           <Script
-            strategy="beforeInteractive"
-            src="assets/vendor/choices/js/choices.min.js"
+            strategy="lazyOnload"
+            src="https://cdnjs.cloudflare.com/ajax/libs/choices.js/10.1.0/choices.min.js"
           ></Script>
-          <Script
-            strategy="beforeInteractive"
-            src="assets/js/functions.js"
-          ></Script>
-          {/* <Script strategy="beforeInteractive" src="assets/js/theme.js"></Script> */}
+          {/* <Script
+            strategy="lazyOnload"
+            src="/assets/js/functions.js"
+          ></Script> */}
         </body>
       </html>
     </>
