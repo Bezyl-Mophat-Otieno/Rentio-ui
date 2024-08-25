@@ -6,7 +6,7 @@ interface PasswordInputProps {
   register: UseFormRegister<any>;
   errors?: any;
   name: string;
-  title?: string;
+  title: string;
 }
 
 const PasswordInput = ({
@@ -24,7 +24,7 @@ const PasswordInput = ({
   return (
     <div className="mb-3 position-relative">
       <label className="form-label" htmlFor="password">
-        {title ?? "Password"}
+        {title}
       </label>
       <input
         id={name}

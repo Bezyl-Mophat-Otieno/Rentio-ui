@@ -1,10 +1,11 @@
 "use client";
-import Divider from "../../common/Divider";
-import EmailInput from "../../modules/form/EmailInput";
-import PasswordInput from "../../modules/form/PasswordInput";
-import SocialButton from "../../common/SocialButton";
-import RadioButtonSelection from "../form/RadioButtonSelection";
-import Button from "../../common/Button";
+import Divider from "@/components/common/Divider";
+import EmailInput from "@/components/modules/form/EmailInput";
+import PasswordInput from "@/components/modules/form/PasswordInput";
+import SocialButton from "@/components/common/SocialButton";
+import RadioButtonSelection from "@/components/modules/form/RadioButtonSelection";
+import { RoleEnum } from "@/types/auth-types";
+import Button from "@/components/common/Button";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 type SignUpFormInput = {
@@ -21,10 +22,11 @@ const SignUpForm = () => {
   } = useForm<SignUpFormInput>();
 
   const roles = [
-    { value: "agent", label: "House Agent" },
-    { value: "landlord", label: "House Landlord" },
-    { value: "tenant", label: "Tenant" },
-    { value: "provider", label: "Service Provider" },
+    { value: RoleEnum.Admin, label: "System Admin" },
+    { value: RoleEnum.HouseAgent, label: "House Agent" },
+    { value: RoleEnum.HouseLandlord, label: "House Landlord" },
+    { value: RoleEnum.Tenant, label: "Tenant" },
+    { value: RoleEnum.ServiceProvider, label: "Service Provider" },
   ];
 
   const onSubmit: SubmitHandler<SignUpFormInput> = (data) => {

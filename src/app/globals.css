@@ -1,8 +1,7 @@
-/* Import necessary CSS from a CDN */
-@import url("https://cdn.example.com/bootstrap-icons/bootstrap-icons.min.css");
-@import url("https://cdn.example.com/font-awesome/all.min.css");
-@import url("https://cdn.example.com/tiny-slider/tiny-slider.min.css");
-@import url("https://cdn.example.com/glightbox/glightbox.min.css");
-@import url("https://cdn.example.com/flatpickr/flatpickr.min.css");
-@import url("https://cdn.example.com/choices/choices.min.css");
-@import url("../../public/assets/css/style.css"); /* Local styles */
+@import "../../public/assets/vendor/bootstrap-icons/bootstrap-icons.css";
+@import "../../public/assets/vendor/font-awesome/css/all.min.css";
+@import "../../public/assets/vendor/tiny-slider/tiny-slider.css";
+@import "../../public/assets/vendor/glightbox/css/glightbox.css";
+@import "../../public/assets/vendor/flatpickr/css/flatpickr.min.css";
+@import "../../public/assets/vendor/choices/css/choices.min.css";
+@import "../../public/assets/css/style.css";

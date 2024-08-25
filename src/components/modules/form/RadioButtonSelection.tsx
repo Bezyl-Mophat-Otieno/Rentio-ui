@@ -2,7 +2,7 @@ import React from "react";
 import { UseFormRegister } from "react-hook-form";
 
 type RadioButtonSelectionProps = {
-  roles: { value: string; label: string }[];
+  roles: { value: number; label: string }[];
   name: string;
   label: string;
   register: UseFormRegister<any>;
@@ -22,12 +22,12 @@ const RadioButtonSelection = ({
       <div key={role.value} className="form-check">
         <input
           type="radio"
-          id={role.value}
+          id={`${role.value}`}
           value={role.value}
           className={`form-check-input ${errors?.[name] ? "is-invalid" : ""}`}
           {...register(name, { required: `${label} is required` })}
         />
-        <label htmlFor={role.value} className="form-check-label">
+        <label htmlFor={`${role.value}`} className="form-check-label">
           {role.label}
         </label>
       </div>
