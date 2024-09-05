@@ -1,24 +1,36 @@
-import { UseFormRegister } from "react-hook-form";
-import { useState } from "react";
+import { useState, memo, useEffect } from "react";
 import clsx from "clsx";
 import IconButton from "@/components/common/IconButton";
+import {
+  UpdateSignInParentState,
+  UpdateSignUpParentState,
+} from "@/types/auth-types";
+import { isEqual } from "lodash";
+
 interface PasswordInputProps {
-  register: UseFormRegister<any>;
-  errors?: any;
+  errors?: string[];
   name: string;
   title: string;
+  value: string;
+  updateParentState: UpdateSignInParentState | UpdateSignUpParentState;
 }
 
 const PasswordInput = ({
-  register,
   errors,
   title,
   name,
+  value,
+  updateParentState,
 }: PasswordInputProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
+  };
+
+  const handleInputOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    updateParentState("formData", { name, value });
   };
 
   return (
@@ -29,8 +41,10 @@ const PasswordInput = ({
       <input
         id={name}
         type={isPasswordVisible ? "text" : "password"}
-        className={`form-control ${errors?.password ? "is-invalid" : ""}`}
-        {...register(name, { required: "Password is required" })}
+        name={name}
+        value={value}
+        className="form-control"
+        onChange={handleInputOnchange}
       />
       <IconButton
         iconClass={clsx("cursor-pointer p-2", {
@@ -39,11 +53,22 @@ const PasswordInput = ({
         })}
         onClick={togglePasswordVisibility}
       />
-      {errors?.password && (
-        <div className="invalid-feedback">{errors.password.message}</div>
-      )}
+      {errors?.map((error, index) => (
+        <div key={index} className="custom-invalid-feedback">
+          {error}
+        </div>
+      ))}
     </div>
   );
 };
 
-export default PasswordInput;
+const propsAreEqual = (
+  prevProps: PasswordInputProps,
+  nextProps: PasswordInputProps,
+) => {
+  return (
+    isEqual(prevProps.errors, nextProps.errors) &&
+    prevProps.value === nextProps.value
+  );
+};
+export default memo(PasswordInput, propsAreEqual);

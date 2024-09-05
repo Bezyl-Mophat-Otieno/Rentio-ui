@@ -5,3 +5,10 @@
 @import "../../public/assets/vendor/flatpickr/css/flatpickr.min.css";
 @import "../../public/assets/vendor/choices/css/choices.min.css";
 @import "../../public/assets/css/style.css";
+
+.custom-invalid-feedback {
+  color: red;
+  font-size: 0.875rem; /* smaller than the default text size */
+  margin-top: 0.25rem; /* space between the input and the error message */
+  display: block;
+}

@@ -1,41 +1,88 @@
 "use client";
-import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { UserSignIn } from "@/types/auth-types";
+import { UserSignInSchema } from "@/types/schemas/auth-schema";
+import { useState, useEffect, use } from "react";
 import Button from "@/components/common/Button";
 import Divider from "@/components/common/Divider";
 import EmailInput from "@/components/modules/form/EmailInput";
 import PasswordInput from "@/components/modules/form/PasswordInput";
 import RememberMe from "@/components/modules/form/RememberMe";
 import SocialButton from "@/components/common/SocialButton";
+import { SignInState, FormFieldUpdate } from "@/types/auth-types";
 
-type SignInFormInputs = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-};
+const SignInForm = () => {
+  const initialState: SignInState = {
+    formData: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+    touchedFields: {
+      email: false,
+      password: false,
+      rememberMe: false,
+    },
+    errors: {
+      email: [],
+      password: [],
+      rememberMe: [],
+    },
+  };
 
-const SignInForm: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignInFormInputs>();
+  const [state, setState] = useState<SignInState>(initialState);
 
-  const onSubmit: SubmitHandler<SignInFormInputs> = (data) => {
-    console.log("Form submitted:", data);
-    // Handle sign-in logic
+  const updateParentState = (
+    key: keyof SignInState,
+    { name, value }: FormFieldUpdate,
+  ) => {
+    setState((prev) => ({
+      ...prev,
+      [key]: {
+        ...prev[key],
+        [name]: value,
+      },
+    }));
+  };
+
+  const { formData, errors } = state;
+
+  useEffect(() => {
+    const result = UserSignInSchema.safeParse(formData);
+    if (!result.success) {
+      setState((prev) => ({
+        ...prev,
+        errors: {
+          ...prev.errors,
+          ...result.error.flatten().fieldErrors,
+        },
+      }));
+    }
+  }, [JSON.stringify(formData)]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formData);
+    console.log(errors);
   };
 
   return (
-    <form className="mt-4 text-start" onSubmit={handleSubmit(onSubmit)}>
-      <EmailInput register={register} errors={errors} />
+    <form className="mt-4 text-start" onSubmit={handleSubmit}>
+      <EmailInput
+        errors={errors.email}
+        updateParentState={updateParentState}
+        value={formData.email}
+      />
       <PasswordInput
-        register={register}
-        errors={errors}
+        updateParentState={updateParentState}
+        errors={errors.password}
         title="Enter password."
         name="password"
+        value={formData.password}
       />
-      <RememberMe register={register} />
+      <RememberMe
+        updateParentState={updateParentState}
+        value={formData.rememberMe}
+      />
       <Button label="Login" type="submit" />
       <Divider />
       <div className="vstack gap-3">

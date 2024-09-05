@@ -4,7 +4,7 @@ import Head from "next/head";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import Script from "next/script";
-
+import ReactQueryWrapper from "@/layouts/default/layout";
 const inter = Inter({ subsets: ["latin"] });
 
 const metadata: Metadata = {
@@ -32,7 +32,9 @@ export default function RootLayout({
       </Head>
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
-          <ThemeProvider attribute="data-bs-theme">{children}</ThemeProvider>
+          <ThemeProvider attribute="data-bs-theme">
+            <ReactQueryWrapper>{children}</ReactQueryWrapper>
+          </ThemeProvider>
           <Script
             strategy="beforeInteractive"
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"

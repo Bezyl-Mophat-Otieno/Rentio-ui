@@ -4,7 +4,6 @@ import { useTheme } from "next-themes";
 
 function ProfileDropdown() {
   const { theme, setTheme, themes } = useTheme();
-  console.log(themes);
   return (
     <div>
       <li className="nav-item ms-3 dropdown">

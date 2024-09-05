@@ -1,5 +1,6 @@
 import { isEqual } from "lodash";
 import { memo, useEffect } from "react";
+import clsx from "clsx";
 import {
   UpdateSignInParentState,
   UpdateSignUpParentState,
@@ -7,11 +8,25 @@ import {
 
 interface EmailInputProps {
   errors?: string[];
+  labelText: string;
+  className?: string;
+  name: string;
+  type: string;
+  id: string;
   value: string;
   updateParentState?: UpdateSignInParentState | UpdateSignUpParentState;
 }
 
-const EmailInput = ({ errors, updateParentState, value }: EmailInputProps) => {
+const TextField = ({
+  errors,
+  updateParentState,
+  value,
+  labelText,
+  name,
+  id,
+  type,
+  className,
+}: EmailInputProps) => {
   const handleInputOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     if (updateParentState) {
@@ -19,19 +34,15 @@ const EmailInput = ({ errors, updateParentState, value }: EmailInputProps) => {
     }
   };
 
-  console.log("EmailInput rendered", errors);
-
   return (
     <div className="mb-3">
-      <label className="form-label" htmlFor="email">
-        Enter a valid email address.
-      </label>
       <input
-        id="email"
-        name="email"
-        type="email"
+        id={id}
+        name={name}
+        placeholder={labelText}
+        type={type}
         value={value}
-        className="form-control"
+        className={clsx("form-control", className)}
         onChange={handleInputOnchange}
       />
       {errors?.map((error: string, index: number) => (
@@ -53,4 +64,4 @@ const propsAreEqual = (
   );
 };
 
-export default memo(EmailInput, propsAreEqual);
+export default memo(TextField, propsAreEqual);
