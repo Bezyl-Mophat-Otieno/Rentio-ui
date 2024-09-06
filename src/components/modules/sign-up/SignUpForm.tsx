@@ -2,21 +2,20 @@
 import { useState } from "react";
 import { UserSignUp } from "@/types/auth-types";
 import Divider from "@/components/common/Divider";
-import EmailInput from "@/components/modules/form/EmailInput";
-import PasswordInput from "@/components/modules/form/PasswordInput";
+import TextField from "@/components/common/TextField";
 import SocialButton from "@/components/common/SocialButton";
-import RadioButtonSelection from "@/components/modules/form/RadioButtonSelection";
 import { RoleEnum } from "@/types/enums/auth-enums";
 import Button from "@/components/common/Button";
 import { SignupState, FormFieldUpdate } from "@/types/auth-types";
+import RadioButton from "@/components/common/RadioButton";
 
 const SignUpForm = () => {
   const roles = [
-    { value: RoleEnum.Admin, label: "System Admin" },
-    { value: RoleEnum.HouseAgent, label: "House Agent" },
-    { value: RoleEnum.HouseLandlord, label: "House Landlord" },
-    { value: RoleEnum.Tenant, label: "Tenant" },
-    { value: RoleEnum.ServiceProvider, label: "Service Provider" },
+    { value: RoleEnum.Admin, labelText: "System Admin" },
+    { value: RoleEnum.HouseAgent, labelText: "House Agent" },
+    { value: RoleEnum.HouseLandlord, labelText: "House Landlord" },
+    { value: RoleEnum.Tenant, labelText: "Tenant" },
+    { value: RoleEnum.ServiceProvider, labelText: "Service Provider" },
   ];
 
   const initialState: SignupState = {
@@ -64,33 +63,49 @@ const SignUpForm = () => {
 
   return (
     <form className="mt-4 text-start" onSubmit={handleSubmit}>
-      <EmailInput
+      <TextField
+        labelText="Enter your email address."
+        id="email"
+        name="email"
+        type="email"
         errors={errors.email}
         value={formData.email}
         updateParentState={updateParentState}
       />
-      <PasswordInput
+      <TextField
+        labelText="Enter your password."
+        id="password"
+        name="password"
+        type="password"
+        errors={errors.password}
         value={formData.password}
         updateParentState={updateParentState}
-        errors={errors.password}
-        title="Enter password."
-        name="password"
       />
-      <PasswordInput
-        updateParentState={updateParentState}
-        errors={errors.confirmPassword}
-        value={formData.confirmPassword}
-        title="Confirm password."
+      <TextField
+        labelText="Confirm your password."
+        id="confirmPassword"
         name="confirmPassword"
-      />
-      <RadioButtonSelection
+        type="password"
+        errors={errors.password}
+        value={formData.confirmPassword}
         updateParentState={updateParentState}
-        errors={errors.role}
-        value={formData.role}
-        roles={roles}
-        name="role"
-        label="Select Your Profile"
       />
+
+      <div className="form-check">
+        <label className="form-label">Select your role</label>
+        {roles.map((role, index) => (
+          <RadioButton
+            id="role"
+            name="role"
+            key={index}
+            value={formData.role}
+            labelText={role.labelText}
+            errors={errors.role}
+            updateParentState={updateParentState}
+          />
+        ))}
+      </div>
+
       <Button label="Create Account" type="submit" />
       <Divider />
       <div className="vstack gap-3">

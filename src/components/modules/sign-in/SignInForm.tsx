@@ -1,14 +1,13 @@
 "use client";
 import { UserSignIn } from "@/types/auth-types";
+import TextField from "@/components/common/TextField";
 import { UserSignInSchema } from "@/types/schemas/auth-schema";
 import { useState, useEffect, use } from "react";
 import Button from "@/components/common/Button";
 import Divider from "@/components/common/Divider";
-import EmailInput from "@/components/modules/form/EmailInput";
-import PasswordInput from "@/components/modules/form/PasswordInput";
-import RememberMe from "@/components/modules/form/RememberMe";
 import SocialButton from "@/components/common/SocialButton";
 import { SignInState, FormFieldUpdate } from "@/types/auth-types";
+import Checkbox from "@/components/common/Checkbox";
 
 const SignInForm = () => {
   const initialState: SignInState = {
@@ -35,6 +34,7 @@ const SignInForm = () => {
     key: keyof SignInState,
     { name, value }: FormFieldUpdate,
   ) => {
+    console.log(key, name, value);
     setState((prev) => ({
       ...prev,
       [key]: {
@@ -46,18 +46,18 @@ const SignInForm = () => {
 
   const { formData, errors } = state;
 
-  useEffect(() => {
-    const result = UserSignInSchema.safeParse(formData);
-    if (!result.success) {
-      setState((prev) => ({
-        ...prev,
-        errors: {
-          ...prev.errors,
-          ...result.error.flatten().fieldErrors,
-        },
-      }));
-    }
-  }, [JSON.stringify(formData)]);
+  // useEffect(() => {
+  //   const result = UserSignInSchema.safeParse(formData);
+  //   if (!result.success) {
+  //     setState((prev) => ({
+  //       ...prev,
+  //       errors: {
+  //         ...prev.errors,
+  //         ...result.error.flatten().fieldErrors,
+  //       },
+  //     }));
+  //   }
+  // }, [JSON.stringify(formData)]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,21 +67,31 @@ const SignInForm = () => {
 
   return (
     <form className="mt-4 text-start" onSubmit={handleSubmit}>
-      <EmailInput
+      <TextField
+        labelText="Enter your email address."
+        id="email"
+        name="email"
+        type="email"
         errors={errors.email}
-        updateParentState={updateParentState}
         value={formData.email}
-      />
-      <PasswordInput
         updateParentState={updateParentState}
-        errors={errors.password}
-        title="Enter password."
+      />
+      <TextField
+        labelText="Enter your password."
+        id="password"
         name="password"
+        type="password"
+        errors={errors.password}
         value={formData.password}
-      />
-      <RememberMe
         updateParentState={updateParentState}
-        value={formData.rememberMe}
+      />
+      <Checkbox
+        labelText="Remember me"
+        id="rememberMe"
+        name="rememberMe"
+        errors={errors.rememberMe}
+        checked={formData.rememberMe}
+        updateParentState={updateParentState}
       />
       <Button label="Login" type="submit" />
       <Divider />

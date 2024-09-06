@@ -1,20 +1,22 @@
 import { isEqual } from "lodash";
-import { memo, useEffect } from "react";
+import { memo, useState } from "react";
+import IconButton from "@/components/common/IconButton";
 import clsx from "clsx";
 import {
   UpdateSignInParentState,
   UpdateSignUpParentState,
 } from "@/types/auth-types";
 
-interface EmailInputProps {
+interface TextFieldInputProps {
   errors?: string[];
   labelText: string;
   className?: string;
+  checked?: boolean;
   name: string;
   type: string;
   id: string;
-  value: string;
-  updateParentState?: UpdateSignInParentState | UpdateSignUpParentState;
+  value?: string;
+  updateParentState: UpdateSignInParentState | UpdateSignUpParentState;
 }
 
 const TextField = ({
@@ -26,25 +28,40 @@ const TextField = ({
   id,
   type,
   className,
-}: EmailInputProps) => {
+  checked,
+}: TextFieldInputProps) => {
   const handleInputOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     if (updateParentState) {
       updateParentState("formData", { name, value });
     }
   };
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   return (
-    <div className="mb-3">
+    <div className={clsx(["mb-3", type === "password" && "position-relative"])}>
       <input
         id={id}
         name={name}
         placeholder={labelText}
-        type={type}
+        type={isPasswordVisible ? "text" : type}
         value={value}
         className={clsx("form-control", className)}
         onChange={handleInputOnchange}
       />
+      {type === "password" && (
+        <IconButton
+          iconClass={clsx("cursor-pointer p-2 mb-4", {
+            "fas fa-eye-slash": !isPasswordVisible,
+            "fas fa-eye": isPasswordVisible,
+          })}
+          onClick={togglePasswordVisibility}
+        />
+      )}
       {errors?.map((error: string, index: number) => (
         <div key={index} className="custom-invalid-feedback">
           {error}
@@ -55,12 +72,13 @@ const TextField = ({
 };
 
 const propsAreEqual = (
-  prevProps: EmailInputProps,
-  nextProps: EmailInputProps,
+  prevProps: TextFieldInputProps,
+  nextProps: TextFieldInputProps,
 ) => {
   return (
     isEqual(prevProps.errors, nextProps.errors) &&
-    prevProps.value === nextProps.value
+    prevProps.value === nextProps.value &&
+    prevProps.name === nextProps.name
   );
 };
 
