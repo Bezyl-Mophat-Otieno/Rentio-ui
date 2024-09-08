@@ -1,19 +1,16 @@
 import { memo } from "react";
 import { isEqual } from "lodash";
-import {
-  UpdateSignInParentState,
-  UpdateSignUpParentState,
-} from "@/types/auth-types";
 import clsx from "clsx";
 
 interface RadioButtonSelectionProps {
-  value: number;
+  value: string;
   id: string;
   name: string;
   labelText: string;
   errors?: any;
   className?: string;
-  updateParentState: UpdateSignUpParentState | UpdateSignInParentState;
+  onChange: (name: string, value: any) => void;
+  onBlur: (name: string) => void;
 }
 
 const RadioButtonSelection = ({
@@ -22,14 +19,18 @@ const RadioButtonSelection = ({
   name,
   labelText,
   errors,
-  updateParentState,
+  onBlur,
+  onChange,
   className,
 }: RadioButtonSelectionProps) => {
   const handleInputOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (updateParentState) {
-      updateParentState("formData", { name, value });
-    }
+    onChange(name, value);
+  };
+
+  const handleInputOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    onBlur(name);
   };
 
   return (
@@ -41,6 +42,7 @@ const RadioButtonSelection = ({
           value={value}
           className={clsx("form-check-input", className)}
           onChange={handleInputOnchange}
+          onBlur={handleInputOnBlur}
           name={name}
         />
         <label htmlFor={name} className="form-check-label">

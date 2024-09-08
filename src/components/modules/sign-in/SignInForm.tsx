@@ -1,8 +1,7 @@
 "use client";
-import { UserSignIn } from "@/types/auth-types";
+import { useState } from "react";
 import TextField from "@/components/common/TextField";
 import { UserSignInSchema } from "@/types/schemas/auth-schema";
-import { useState, useEffect, use } from "react";
 import Button from "@/components/common/Button";
 import Divider from "@/components/common/Divider";
 import SocialButton from "@/components/common/SocialButton";
@@ -30,68 +29,112 @@ const SignInForm = () => {
 
   const [state, setState] = useState<SignInState>(initialState);
 
-  const updateParentState = (
-    key: keyof SignInState,
-    { name, value }: FormFieldUpdate,
-  ) => {
-    console.log(key, name, value);
-    setState((prev) => ({
-      ...prev,
-      [key]: {
-        ...prev[key],
-        [name]: value,
-      },
-    }));
+  const { formData, errors, touchedFields } = state;
+
+  const handleFieldChange = (name: string, value: any) => {
+    setState((prevState) => {
+      const updatedFormData = { ...prevState.formData, [name]: value };
+      const updatedTouchedFields = prevState.touchedFields;
+
+      // Perform validation only if the field was already touched
+      if (updatedTouchedFields[name as keyof SignInState["touchedFields"]]) {
+        const result = UserSignInSchema.safeParse(updatedFormData);
+
+        if (!result.success) {
+          return {
+            ...prevState,
+            formData: updatedFormData,
+            errors: {
+              ...prevState.errors,
+              [name]:
+                result.error.flatten().fieldErrors[
+                  name as keyof SignInState["errors"]
+                ],
+            },
+            disabled: true,
+          };
+        }
+
+        return {
+          ...prevState,
+          formData: updatedFormData,
+          errors: { ...prevState.errors, [name]: [] },
+          disabled: false,
+        };
+      }
+      // Just update the form data if the field hasn't been touched yet
+      return { ...prevState, formData: updatedFormData };
+    });
   };
 
-  const { formData, errors } = state;
+  // Handle blur and mark the field as touched, validating all touched fields
+  const handleFieldBlur = (name: string) => {
+    setState((prevState) => {
+      const updatedTouchedFields = {
+        ...prevState.touchedFields,
+        [name]: true,
+      };
+      const result = UserSignInSchema.safeParse(prevState.formData);
 
-  // useEffect(() => {
-  //   const result = UserSignInSchema.safeParse(formData);
-  //   if (!result.success) {
-  //     setState((prev) => ({
-  //       ...prev,
-  //       errors: {
-  //         ...prev.errors,
-  //         ...result.error.flatten().fieldErrors,
-  //       },
-  //     }));
-  //   }
-  // }, [JSON.stringify(formData)]);
+      if (!result.success) {
+        return {
+          ...prevState,
+          touchedFields: updatedTouchedFields,
+          errors: {
+            ...prevState.errors,
+            [name]:
+              result.error.flatten().fieldErrors[
+                name as keyof SignInState["errors"]
+              ],
+          },
+          disabled: true,
+        };
+      }
+
+      return {
+        ...prevState,
+        touchedFields: updatedTouchedFields,
+        errors: { ...prevState.errors, [name]: [] },
+        disabled: false,
+      };
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
-    console.log(errors);
   };
 
   return (
     <form className="mt-4 text-start" onSubmit={handleSubmit}>
       <TextField
+        onBlur={handleFieldBlur}
+        onChange={handleFieldChange}
         labelText="Enter your email address."
         id="email"
         name="email"
         type="email"
         errors={errors.email}
         value={formData.email}
-        updateParentState={updateParentState}
       />
       <TextField
+        onBlur={handleFieldBlur}
+        onChange={handleFieldChange}
         labelText="Enter your password."
         id="password"
         name="password"
         type="password"
         errors={errors.password}
         value={formData.password}
-        updateParentState={updateParentState}
       />
       <Checkbox
+        onBlur={handleFieldBlur}
+        onChange={handleFieldChange}
         labelText="Remember me"
         id="rememberMe"
         name="rememberMe"
         errors={errors.rememberMe}
         checked={formData.rememberMe}
-        updateParentState={updateParentState}
       />
       <Button label="Login" type="submit" />
       <Divider />

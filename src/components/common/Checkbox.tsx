@@ -1,29 +1,35 @@
-import { memo, useEffect } from "react";
+import { memo } from "react";
 import clsx from "clsx";
-import { UpdateSignInParentState } from "@/types/auth-types";
 import { isEqual } from "lodash";
 interface CheckboxProps {
-  updateParentState: UpdateSignInParentState;
   errors?: string[];
   labelText: string;
   id: string;
   className?: string;
   name: string;
   checked: boolean;
+  onChange: (name: string, value: any) => void;
+  onBlur: (name: string) => void;
 }
 
 const Checkbox = ({
-  updateParentState,
   checked,
   labelText,
   name,
   id,
   className,
   errors,
+  onBlur,
+  onChange,
 }: CheckboxProps) => {
   const handleInputOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
-    updateParentState("formData", { name, value: checked });
+    onChange(name, checked);
+  };
+
+  const handleInputOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    onBlur(name);
   };
 
   return (
@@ -36,6 +42,7 @@ const Checkbox = ({
           checked={checked}
           className={clsx("form-check-input", className)}
           onChange={handleInputOnchange}
+          onBlur={handleInputOnBlur}
         />
         <label className="form-check-label" htmlFor="checkbox">
           {labelText}

@@ -2,42 +2,40 @@ import { isEqual } from "lodash";
 import { memo, useState } from "react";
 import IconButton from "@/components/common/IconButton";
 import clsx from "clsx";
-import {
-  UpdateSignInParentState,
-  UpdateSignUpParentState,
-} from "@/types/auth-types";
 
 interface TextFieldInputProps {
   errors?: string[];
   labelText: string;
   className?: string;
-  checked?: boolean;
   name: string;
   type: string;
   id: string;
   value?: string;
-  updateParentState: UpdateSignInParentState | UpdateSignUpParentState;
+  onChange: (name: string, value: any) => void;
+  onBlur: (name: string) => void;
 }
 
 const TextField = ({
   errors,
-  updateParentState,
   value,
   labelText,
   name,
   id,
   type,
   className,
-  checked,
+  onChange,
+  onBlur,
 }: TextFieldInputProps) => {
   const handleInputOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-    if (updateParentState) {
-      updateParentState("formData", { name, value });
-    }
+    const { name, value } = e.target;
+    onChange(name, value);
   };
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const handleInputOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    onBlur(name);
+  };
 
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
@@ -52,6 +50,7 @@ const TextField = ({
         value={value}
         className={clsx("form-control", className)}
         onChange={handleInputOnchange}
+        onBlur={handleInputOnBlur}
       />
       {type === "password" && (
         <IconButton

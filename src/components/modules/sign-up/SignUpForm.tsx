@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { UserSignUp } from "@/types/auth-types";
+import { UserSignUpSchema } from "@/types/schemas/auth-schema";
 import Divider from "@/components/common/Divider";
 import TextField from "@/components/common/TextField";
 import SocialButton from "@/components/common/SocialButton";
@@ -23,7 +23,7 @@ const SignUpForm = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      role: RoleEnum.Tenant,
+      role: RoleEnum.Tenant.toString(),
     },
     touchedFields: {
       email: false,
@@ -54,8 +54,76 @@ const SignUpForm = () => {
     }));
   };
 
-  const { formData, errors } = state;
+  const { formData, errors, touchedFields } = state;
 
+  const handleFieldChange = (name: string, value: any) => {
+    setState((prevState) => {
+      const updatedFormData = { ...prevState.formData, [name]: value };
+      const updatedTouchedFields = prevState.touchedFields;
+
+      // Perform validation only if the field was already touched
+      if (updatedTouchedFields[name as keyof SignupState["touchedFields"]]) {
+        const result = UserSignUpSchema.safeParse(updatedFormData);
+
+        if (!result.success) {
+          return {
+            ...prevState,
+            formData: updatedFormData,
+            errors: {
+              ...prevState.errors,
+              [name]:
+                result.error.flatten().fieldErrors[
+                  name as keyof SignupState["errors"]
+                ],
+            },
+            disabled: true,
+          };
+        }
+
+        return {
+          ...prevState,
+          formData: updatedFormData,
+          errors: { ...prevState.errors, [name]: [] },
+          disabled: false,
+        };
+      }
+      // Just update the form data if the field hasn't been touched yet
+      return { ...prevState, formData: updatedFormData };
+    });
+  };
+
+  // Handle blur and mark the field as touched, validating all touched fields
+  const handleFieldBlur = (name: string) => {
+    setState((prevState) => {
+      const updatedTouchedFields = {
+        ...prevState.touchedFields,
+        [name]: true,
+      };
+      const result = UserSignUpSchema.safeParse(prevState.formData);
+
+      if (!result.success) {
+        return {
+          ...prevState,
+          touchedFields: updatedTouchedFields,
+          errors: {
+            ...prevState.errors,
+            [name]:
+              result.error.flatten().fieldErrors[
+                name as keyof SignupState["errors"]
+              ],
+          },
+          disabled: true,
+        };
+      }
+
+      return {
+        ...prevState,
+        touchedFields: updatedTouchedFields,
+        errors: { ...prevState.errors, [name]: [] },
+        disabled: false,
+      };
+    });
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
@@ -64,31 +132,34 @@ const SignUpForm = () => {
   return (
     <form className="mt-4 text-start" onSubmit={handleSubmit}>
       <TextField
+        onBlur={handleFieldBlur}
+        onChange={handleFieldChange}
         labelText="Enter your email address."
         id="email"
         name="email"
         type="email"
         errors={errors.email}
         value={formData.email}
-        updateParentState={updateParentState}
       />
       <TextField
+        onBlur={handleFieldBlur}
+        onChange={handleFieldChange}
         labelText="Enter your password."
         id="password"
         name="password"
         type="password"
         errors={errors.password}
         value={formData.password}
-        updateParentState={updateParentState}
       />
       <TextField
+        onBlur={handleFieldBlur}
+        onChange={handleFieldChange}
         labelText="Confirm your password."
         id="confirmPassword"
         name="confirmPassword"
         type="password"
-        errors={errors.password}
+        errors={errors.confirmPassword}
         value={formData.confirmPassword}
-        updateParentState={updateParentState}
       />
 
       <div className="form-check">
@@ -101,7 +172,8 @@ const SignUpForm = () => {
             value={formData.role}
             labelText={role.labelText}
             errors={errors.role}
-            updateParentState={updateParentState}
+            onBlur={handleFieldBlur}
+            onChange={handleFieldChange}
           />
         ))}
       </div>
