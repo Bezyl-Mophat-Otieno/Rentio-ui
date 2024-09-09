@@ -6,7 +6,7 @@ import TextField from "@/components/common/TextField";
 import SocialButton from "@/components/common/SocialButton";
 import { RoleEnum } from "@/types/enums/auth-enums";
 import Button from "@/components/common/Button";
-import { SignupState, FormFieldUpdate } from "@/types/auth-types";
+import { SignupState } from "@/types/auth-types";
 import RadioButton from "@/components/common/RadioButton";
 
 const SignUpForm = () => {
@@ -37,24 +37,12 @@ const SignUpForm = () => {
       confirmPassword: [],
       role: [],
     },
+    disabled: true,
   };
 
   const [state, setState] = useState<SignupState>(initialState);
 
-  const updateParentState = (
-    key: keyof SignupState,
-    { name, value }: FormFieldUpdate,
-  ) => {
-    setState((prev) => ({
-      ...prev,
-      [key]: {
-        ...prev[key],
-        [name]: value,
-      },
-    }));
-  };
-
-  const { formData, errors, touchedFields } = state;
+  const { formData, errors, disabled } = state;
 
   const handleFieldChange = (name: string, value: any) => {
     setState((prevState) => {
@@ -178,7 +166,7 @@ const SignUpForm = () => {
         ))}
       </div>
 
-      <Button label="Create Account" type="submit" />
+      <Button label="Create Account" type="submit" disabled={disabled} />
       <Divider />
       <div className="vstack gap-3">
         <SocialButton

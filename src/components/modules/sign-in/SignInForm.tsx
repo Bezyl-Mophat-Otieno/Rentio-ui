@@ -7,6 +7,9 @@ import Divider from "@/components/common/Divider";
 import SocialButton from "@/components/common/SocialButton";
 import { SignInState, FormFieldUpdate } from "@/types/auth-types";
 import Checkbox from "@/components/common/Checkbox";
+import { useLogin } from "@/hooks/react-query/auth/useLogin";
+import Alert from "@/components/common/Alert";
+import Spinner from "@/components/common/Spinner";
 
 const SignInForm = () => {
   const initialState: SignInState = {
@@ -25,11 +28,12 @@ const SignInForm = () => {
       password: [],
       rememberMe: [],
     },
+    disabled: true,
   };
 
   const [state, setState] = useState<SignInState>(initialState);
 
-  const { formData, errors, touchedFields } = state;
+  const { formData, errors, disabled } = state;
 
   const handleFieldChange = (name: string, value: any) => {
     setState((prevState) => {
@@ -100,13 +104,26 @@ const SignInForm = () => {
     });
   };
 
+  const { mutate: login, error, isError, isPending, isSuccess } = useLogin();
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
+    login(formData);
   };
 
   return (
     <form className="mt-4 text-start" onSubmit={handleSubmit}>
+      {isSuccess ||
+        (isError && (
+          <Alert
+            message={isSuccess ? "Login successful" : error?.message}
+            type={isSuccess ? "success" : "danger"}
+          />
+        ))}
+
+      {isPending && <Spinner />}
+
       <TextField
         onBlur={handleFieldBlur}
         onChange={handleFieldChange}
@@ -136,7 +153,7 @@ const SignInForm = () => {
         errors={errors.rememberMe}
         checked={formData.rememberMe}
       />
-      <Button label="Login" type="submit" />
+      <Button label="Login" type="submit" disabled={disabled} />
       <Divider />
       <div className="vstack gap-3">
         <SocialButton

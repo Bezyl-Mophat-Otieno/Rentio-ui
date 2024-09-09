@@ -8,12 +8,14 @@ interface SignInState {
   formData: UserSignIn;
   touchedFields: Record<keyof UserSignIn, boolean>;
   errors: Record<keyof UserSignIn, string[]>;
+  disabled: boolean;
 }
 
 interface SignupState {
   formData: UserSignUp;
   touchedFields: Record<keyof UserSignUp, boolean>;
   errors: Record<keyof UserSignUp, string[]>;
+  disabled: boolean;
 }
 
 interface FormFieldUpdate {
@@ -30,6 +32,22 @@ type UpdateSignUpParentState = (
   { name, value }: FormFieldUpdate,
 ) => void;
 
+interface LoginRequest {
+  email: string;
+  password: string;
+}
+interface RegisterResponse {
+  success: boolean;
+}
+
+interface LoginResponse {
+  userID: string;
+  roleID: number;
+  permissions: any[];
+  token: string;
+  refreshToken: string;
+}
+
 export type {
   UserSignUp,
   UserSignIn,
@@ -38,4 +56,7 @@ export type {
   UpdateSignInParentState,
   UpdateSignUpParentState,
   FormFieldUpdate,
+  LoginRequest,
+  RegisterResponse,
+  LoginResponse,
 };
