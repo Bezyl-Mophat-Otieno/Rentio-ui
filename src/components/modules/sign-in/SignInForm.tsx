@@ -10,6 +10,7 @@ import Checkbox from "@/components/common/Checkbox";
 import { useLogin } from "@/hooks/react-query/auth/useLogin";
 import Alert from "@/components/common/Alert";
 import Spinner from "@/components/common/Spinner";
+import { getAuthErrorMessage } from "@/errors/custom-error-handling";
 
 const SignInForm = () => {
   const initialState: SignInState = {
@@ -108,19 +109,21 @@ const SignInForm = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
     login(formData);
   };
 
   return (
     <form className="mt-4 text-start" onSubmit={handleSubmit}>
-      {isSuccess ||
-        (isError && (
-          <Alert
-            message={isSuccess ? "Login successful" : error?.message}
-            type={isSuccess ? "success" : "danger"}
-          />
-        ))}
+      {(isSuccess || isError) && (
+        <Alert
+          type={isSuccess ? "success" : "danger"}
+          message={
+            isSuccess
+              ? "You have successfully logged in."
+              : getAuthErrorMessage(error)
+          }
+        />
+      )}
 
       {isPending && <Spinner />}
 

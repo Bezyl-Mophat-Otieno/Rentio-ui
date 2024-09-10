@@ -8,6 +8,10 @@ import { RoleEnum } from "@/types/enums/auth-enums";
 import Button from "@/components/common/Button";
 import { SignupState } from "@/types/auth-types";
 import RadioButton from "@/components/common/RadioButton";
+import Alert from "@/components/common/Alert";
+import { getAuthErrorMessage } from "@/errors/custom-error-handling";
+import { useRegister } from "@/hooks/react-query/auth/useRegister";
+import ProgressBar from "@/components/common/ProgressBar";
 
 const SignUpForm = () => {
   const roles = [
@@ -23,19 +27,19 @@ const SignUpForm = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      role: RoleEnum.Tenant.toString(),
+      roleId: RoleEnum.Tenant,
     },
     touchedFields: {
       email: false,
       password: false,
       confirmPassword: false,
-      role: false,
+      roleId: false,
     },
     errors: {
       email: [],
       password: [],
       confirmPassword: [],
-      role: [],
+      roleId: [],
     },
     disabled: true,
   };
@@ -112,13 +116,34 @@ const SignUpForm = () => {
       };
     });
   };
+
+  const {
+    isPending,
+    isError,
+    isSuccess,
+    mutate: register,
+    error,
+  } = useRegister();
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    register(formData);
   };
 
   return (
     <form className="mt-4 text-start" onSubmit={handleSubmit}>
+      {isPending && <ProgressBar />}
+      {(isError || isSuccess) && (
+        <Alert
+          type={isSuccess ? "success" : "danger"}
+          message={
+            isSuccess
+              ? "User successfully registered"
+              : getAuthErrorMessage(error)
+          }
+        />
+      )}
+
       <TextField
         onBlur={handleFieldBlur}
         onChange={handleFieldChange}
@@ -152,14 +177,15 @@ const SignUpForm = () => {
 
       <div className="form-check">
         <label className="form-label">Select your role</label>
-        {roles.map((role, index) => (
+        {roles.map((role: any, index: any) => (
           <RadioButton
-            id="role"
-            name="role"
+            id="roleId"
+            name="roleId"
             key={index}
-            value={formData.role}
+            value={role.value}
+            checked={role.value === formData.roleId}
             labelText={role.labelText}
-            errors={errors.role}
+            errors={errors.roleId}
             onBlur={handleFieldBlur}
             onChange={handleFieldChange}
           />

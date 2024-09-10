@@ -19,8 +19,6 @@ const EmailInput = ({ errors, updateParentState, value }: EmailInputProps) => {
     }
   };
 
-  console.log("EmailInput rendered", errors);
-
   return (
     <div className="mb-3">
       <label className="form-label" htmlFor="email">

@@ -20,7 +20,7 @@ export const UserSignUpSchema = z
     email: z.string().email(),
     password: passwordSchema,
     confirmPassword: z.string(),
-    role: z.string().min(1, { message: "Please choose a role" }),
+    roleId: z.number().min(1, { message: "Please choose a role" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

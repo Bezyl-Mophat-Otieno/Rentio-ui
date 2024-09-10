@@ -36,6 +36,12 @@ interface LoginRequest {
   email: string;
   password: string;
 }
+
+interface RegisterRequest {
+  email: string;
+  password: string;
+  roleId: number;
+}
 interface RegisterResponse {
   success: boolean;
 }
@@ -59,4 +65,5 @@ export type {
   LoginRequest,
   RegisterResponse,
   LoginResponse,
+  RegisterRequest,
 };

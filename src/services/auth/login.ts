@@ -1,6 +1,7 @@
 import { apiClient } from "@/services/api-client";
 import authRoutes from "@/routes/auth";
 import { LoginRequest, LoginResponse } from "@/types/auth-types";
+import { AxiosError } from "axios";
 
 export const login = async ({
   email,
@@ -14,6 +15,6 @@ export const login = async ({
 
     return response.data;
   } catch (error) {
-    throw error;
+    throw error as AxiosError;
   }
 };
