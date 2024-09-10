@@ -8,7 +8,6 @@ interface RadioButtonSelectionProps {
   name: string;
   labelText: string;
   errors?: any;
-  checked?: boolean;
   className?: string;
   onChange: (name: string, value: any) => void;
   onBlur: (name: string) => void;
@@ -23,7 +22,6 @@ const RadioButtonSelection = ({
   onBlur,
   onChange,
   className,
-  checked,
 }: RadioButtonSelectionProps) => {
   const handleInputOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,7 +41,6 @@ const RadioButtonSelection = ({
           type="radio"
           id={id}
           value={value}
-          checked={checked}
           className={clsx("form-check-input", className)}
           onChange={handleInputOnchange}
           onBlur={handleInputOnBlur}

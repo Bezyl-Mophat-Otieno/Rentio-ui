@@ -6,28 +6,25 @@ import Button from "@/components/common/Button";
 import Divider from "@/components/common/Divider";
 import SocialButton from "@/components/common/SocialButton";
 import { SignInState, FormFieldUpdate } from "@/types/auth-types";
-import Checkbox from "@/components/common/Checkbox";
 import { useLogin } from "@/hooks/react-query/auth/useLogin";
 import Alert from "@/components/common/Alert";
-import Spinner from "@/components/common/Spinner";
-import { getAuthErrorMessage } from "@/errors/custom-error-handling";
+import ProgressBar from "@/components/common/ProgressBar";
+import { getLoginErrorMessage } from "@/errors/custom-error-handling";
+import Link from "next/link";
 
 const SignInForm = () => {
   const initialState: SignInState = {
     formData: {
       email: "",
       password: "",
-      rememberMe: false,
     },
     touchedFields: {
       email: false,
       password: false,
-      rememberMe: false,
     },
     errors: {
       email: [],
       password: [],
-      rememberMe: [],
     },
     disabled: true,
   };
@@ -113,68 +110,64 @@ const SignInForm = () => {
   };
 
   return (
-    <form className="mt-4 text-start" onSubmit={handleSubmit}>
-      {(isSuccess || isError) && (
-        <Alert
-          type={isSuccess ? "success" : "danger"}
-          message={
-            isSuccess
-              ? "You have successfully logged in."
-              : getAuthErrorMessage(error)
-          }
-        />
-      )}
+    <>
+      <p className="mb-0">
+        New here? <Link href="/auth/sign-up">Create an account</Link>
+      </p>
+      <form className="mt-4 text-start" onSubmit={handleSubmit}>
+        {(isSuccess || isError) && (
+          <Alert
+            type={isSuccess ? "success" : "danger"}
+            message={
+              isSuccess
+                ? "You have successfully logged in."
+                : getLoginErrorMessage(error)
+            }
+          />
+        )}
 
-      {isPending && <Spinner />}
+        {isPending && <ProgressBar />}
 
-      <TextField
-        onBlur={handleFieldBlur}
-        onChange={handleFieldChange}
-        labelText="Enter your email address."
-        id="email"
-        name="email"
-        type="email"
-        errors={errors.email}
-        value={formData.email}
-      />
-      <TextField
-        onBlur={handleFieldBlur}
-        onChange={handleFieldChange}
-        labelText="Enter your password."
-        id="password"
-        name="password"
-        type="password"
-        errors={errors.password}
-        value={formData.password}
-      />
-      <Checkbox
-        onBlur={handleFieldBlur}
-        onChange={handleFieldChange}
-        labelText="Remember me"
-        id="rememberMe"
-        name="rememberMe"
-        errors={errors.rememberMe}
-        checked={formData.rememberMe}
-      />
-      <Button label="Login" type="submit" disabled={disabled} />
-      <Divider />
-      <div className="vstack gap-3">
-        <SocialButton
-          platform="Google"
-          iconClass="fa-google text-google-icon"
-          onClick={() => {}}
+        <TextField
+          onBlur={handleFieldBlur}
+          onChange={handleFieldChange}
+          labelText="Enter your email address."
+          id="email"
+          name="email"
+          type="email"
+          errors={errors.email}
+          value={formData.email}
         />
-        <SocialButton
-          platform="Facebook"
-          iconClass="fa-facebook-f text-facebook"
-          onClick={() => {}}
+        <TextField
+          onBlur={handleFieldBlur}
+          onChange={handleFieldChange}
+          labelText="Enter your password."
+          id="password"
+          name="password"
+          type="password"
+          errors={errors.password}
+          value={formData.password}
         />
-      </div>
-      <div className="text-primary-hover mt-3 text-center">
-        Copyrights ©2023 Booking. Build by{" "}
-        <a href="https://www.webestica.com/">Webestica</a>.
-      </div>
-    </form>
+        <Button label="Login" type="submit" disabled={disabled} />
+        <Divider />
+        <div className="vstack gap-3">
+          <SocialButton
+            platform="Google"
+            iconClass="fa-google text-google-icon"
+            onClick={() => {}}
+          />
+          <SocialButton
+            platform="Facebook"
+            iconClass="fa-facebook-f text-facebook"
+            onClick={() => {}}
+          />
+        </div>
+        <div className="text-primary-hover mt-3 text-center">
+          Copyrights ©2023 Booking. Build by{" "}
+          <a href="https://www.webestica.com/">Webestica</a>.
+        </div>
+      </form>
+    </>
   );
 };
 

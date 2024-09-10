@@ -9,9 +9,10 @@ import Button from "@/components/common/Button";
 import { SignupState } from "@/types/auth-types";
 import RadioButton from "@/components/common/RadioButton";
 import Alert from "@/components/common/Alert";
-import { getAuthErrorMessage } from "@/errors/custom-error-handling";
+import { getLoginErrorMessage } from "@/errors/custom-error-handling";
 import { useRegister } from "@/hooks/react-query/auth/useRegister";
 import ProgressBar from "@/components/common/ProgressBar";
+import Link from "next/link";
 
 const SignUpForm = () => {
   const roles = [
@@ -131,86 +132,90 @@ const SignUpForm = () => {
   };
 
   return (
-    <form className="mt-4 text-start" onSubmit={handleSubmit}>
-      {isPending && <ProgressBar />}
-      {(isError || isSuccess) && (
-        <Alert
-          type={isSuccess ? "success" : "danger"}
-          message={
-            isSuccess
-              ? "User successfully registered"
-              : getAuthErrorMessage(error)
-          }
-        />
-      )}
-
-      <TextField
-        onBlur={handleFieldBlur}
-        onChange={handleFieldChange}
-        labelText="Enter your email address."
-        id="email"
-        name="email"
-        type="email"
-        errors={errors.email}
-        value={formData.email}
-      />
-      <TextField
-        onBlur={handleFieldBlur}
-        onChange={handleFieldChange}
-        labelText="Enter your password."
-        id="password"
-        name="password"
-        type="password"
-        errors={errors.password}
-        value={formData.password}
-      />
-      <TextField
-        onBlur={handleFieldBlur}
-        onChange={handleFieldChange}
-        labelText="Confirm your password."
-        id="confirmPassword"
-        name="confirmPassword"
-        type="password"
-        errors={errors.confirmPassword}
-        value={formData.confirmPassword}
-      />
-
-      <div className="form-check">
-        <label className="form-label">Select your role</label>
-        {roles.map((role: any, index: any) => (
-          <RadioButton
-            id="roleId"
-            name="roleId"
-            key={index}
-            value={role.value}
-            checked={role.value === formData.roleId}
-            labelText={role.labelText}
-            errors={errors.roleId}
-            onBlur={handleFieldBlur}
-            onChange={handleFieldChange}
+    <>
+      <p className="mb-0">
+        Already a member? <Link href="/auth/sign-in">Sign in</Link>
+      </p>
+      <form className="mt-4 text-start" onSubmit={handleSubmit}>
+        {isPending && <ProgressBar />}
+        {(isError || isSuccess) && (
+          <Alert
+            type={isSuccess ? "success" : "danger"}
+            message={
+              isSuccess
+                ? "User successfully registered"
+                : getLoginErrorMessage(error)
+            }
           />
-        ))}
-      </div>
+        )}
 
-      <Button label="Create Account" type="submit" disabled={disabled} />
-      <Divider />
-      <div className="vstack gap-3">
-        <SocialButton
-          platform="Google"
-          iconClass="fa-google text-google-icon"
-          onClick={() => {}}
+        <TextField
+          onBlur={handleFieldBlur}
+          onChange={handleFieldChange}
+          labelText="Enter your email address."
+          id="email"
+          name="email"
+          type="email"
+          errors={errors.email}
+          value={formData.email}
         />
-        <SocialButton
-          platform="Facebook"
-          iconClass="fa-facebook-f text-facebook"
-          onClick={() => {}}
+        <TextField
+          onBlur={handleFieldBlur}
+          onChange={handleFieldChange}
+          labelText="Enter your password."
+          id="password"
+          name="password"
+          type="password"
+          errors={errors.password}
+          value={formData.password}
         />
-      </div>
-      <div className="text-primary-hover mt-3 text-center">
-        Copyrights ©2023 Booking. Build by{" "}
-        <a href="https://www.webestica.com/">Webestica</a>.
-      </div>
-    </form>
+        <TextField
+          onBlur={handleFieldBlur}
+          onChange={handleFieldChange}
+          labelText="Confirm your password."
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          errors={errors.confirmPassword}
+          value={formData.confirmPassword}
+        />
+
+        <div className="form-check">
+          <label className="form-label">Select your role</label>
+          {roles.map((role: any, index: any) => (
+            <RadioButton
+              id="roleId"
+              name="roleId"
+              key={index}
+              value={role.value}
+              labelText={role.labelText}
+              errors={errors.roleId}
+              onBlur={handleFieldBlur}
+              onChange={handleFieldChange}
+            />
+          ))}
+        </div>
+
+        <Button label="Create Account" type="submit" disabled={disabled} />
+        <Divider />
+        <div className="vstack gap-3">
+          <SocialButton
+            platform="Google"
+            iconClass="fa-google text-google-icon"
+            onClick={() => {}}
+          />
+          <SocialButton
+            platform="Facebook"
+            iconClass="fa-facebook-f text-facebook"
+            onClick={() => {}}
+          />
+        </div>
+        <div className="text-primary-hover mt-3 text-center">
+          Copyrights ©2024 Booking. Build by{"Mophat.LLC"}
+          <a href="https://www.webestica.com/">Webestica</a>.
+        </div>
+      </form>
+    </>
   );
 };
 

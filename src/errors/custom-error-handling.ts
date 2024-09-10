@@ -28,7 +28,7 @@ export const getGenericErrorMessage = (error: Error): string => {
   }
 };
 
-export const getAuthErrorMessage = (error: Error): string => {
+export const getLoginErrorMessage = (error: Error): string => {
   const axiosError = error as AxiosError;
 
   if (axiosError.response) {
@@ -55,5 +55,45 @@ export const getAuthErrorMessage = (error: Error): string => {
   } else {
     // Something else happened while setting up the request
     return `An error occurred: ${axiosError.message}`;
+  }
+};
+
+export const getRegistrationErrorMessage = (error: Error): string => {
+  const axiosError = error as AxiosError;
+
+  if (axiosError.response) {
+    // Server responded with a status code outside the 2xx range
+    switch (axiosError.response.status) {
+      case 400:
+        // Server-side validation issues or missing fields
+        return "There seems to be a problem with the information you provided. Please review your inputs.";
+      case 401:
+        // Unauthorized or bad credentials (though not typical for registration)
+        return "Your session has expired or you're not authorized. Please log in again.";
+      case 403:
+        // Forbidden access (e.g., attempting to register with a restricted role)
+        return "You are not allowed to perform this action. Please contact support.";
+      case 404:
+        // Endpoint not found or similar issues
+        return "The registration service is currently unavailable. Please try again later.";
+      case 409:
+        // Conflict error, often for duplicate email or username
+        return "An account with this email already exists. Please try logging in or use a different email.";
+      case 422:
+        // Unprocessable entity, possibly due to failed validation (e.g., weak password)
+        return "Your password doesn't meet the security requirements. Please choose a stronger password.";
+      case 500:
+        // Server error
+        return "Our servers are currently facing some issues. Please try registering again in a few moments.";
+      default:
+        // Any other errors
+        return "An unexpected error occurred during registration. Please try again.";
+    }
+  } else if (axiosError.request) {
+    // No response received from the server
+    return "We couldn't reach the server. Please check your internet connection and try again.";
+  } else {
+    // Something else happened during the request setup
+    return `Registration error: ${axiosError.message}`;
   }
 };
