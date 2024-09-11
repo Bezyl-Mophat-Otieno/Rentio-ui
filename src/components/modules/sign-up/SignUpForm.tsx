@@ -9,8 +9,8 @@ import Button from "@/components/common/Button";
 import { SignupState } from "@/types/auth-types";
 import RadioButton from "@/components/common/RadioButton";
 import Alert from "@/components/common/Alert";
-import { getLoginErrorMessage } from "@/errors/custom-error-handling";
-import { useRegister } from "@/hooks/react-query/auth/useRegister";
+import { getLoginErrorMessage } from "@/errors/custom-error-messages";
+import { useRegister } from "@/hooks/react-query/mutations/auth/useRegister";
 import ProgressBar from "@/components/common/ProgressBar";
 import Link from "next/link";
 

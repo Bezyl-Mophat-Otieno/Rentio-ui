@@ -6,10 +6,10 @@ import Button from "@/components/common/Button";
 import Divider from "@/components/common/Divider";
 import SocialButton from "@/components/common/SocialButton";
 import { SignInState, FormFieldUpdate } from "@/types/auth-types";
-import { useLogin } from "@/hooks/react-query/auth/useLogin";
+import { useLogin } from "@/hooks/react-query/mutations/auth/useLogin";
 import Alert from "@/components/common/Alert";
 import ProgressBar from "@/components/common/ProgressBar";
-import { getLoginErrorMessage } from "@/errors/custom-error-handling";
+import { getLoginErrorMessage } from "@/errors/custom-error-messages";
 import Link from "next/link";
 
 const SignInForm = () => {
