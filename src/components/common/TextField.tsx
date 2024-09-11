@@ -76,8 +76,7 @@ const propsAreEqual = (
 ) => {
   return (
     isEqual(prevProps.errors, nextProps.errors) &&
-    prevProps.value === nextProps.value &&
-    prevProps.name === nextProps.name
+    prevProps.value === nextProps.value
   );
 };
 
